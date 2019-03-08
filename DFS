@@ -1,0 +1,126 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+#define Max 50
+int a[Max][Max];
+int n;
+int check[Max+1];
+stack< int> Stack;
+int befor[Max];
+void Init(){
+	cout << "Nhap so dinh n = ";
+	cin >> n;
+	for(int i = 1; i <= n; i++){
+		check[i] = 1;
+	}
+	cout <<"Nhap ma tran ke :" << endl;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1;j <= n; j++){
+			cin >> a[i][j];
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+void DFS_dequy(int u, int a[][Max]){
+	check[u] = 0; // Dua kiem tra u = 0 -> da xet
+	cout << u << " "; //  in u 
+	for(int v = 1; v <= n; v++){ // duyet cac dinh ke u 
+		if(check[v] == 1 && a[u][v] == 1) DFS_dequy(v,a); // gap dinh v ke u thi goi DFS v
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+void DFS_stack(int u, int a[][Max]){
+	int dem = 1;
+	check[u] = 0;
+	Stack.push(u);
+	int t;
+	cout << u << " ";
+	for(int i = 1; i <= n; i++){
+		befor[i] = 0;
+	}
+	while(!Stack.empty()){
+		int s = Stack.top();
+		Stack.pop();
+		for(t = 1; t <= n; t++){
+			if(check[t] == 1 && a[s][t] == 1){
+			    cout << t << " ";
+				Stack.push(s);
+				Stack.push(t); // Cho s va t vao , sau do quay lai lay t di xet tiep r cho t va t' vao stack .....
+				//dem++;
+				befor[t] = s;
+				check[t] = 0;
+				break;
+			}
+		}
+		//if(dem == 13) break; Dung de giu lai cac gia tri trong stack 
+	} 
+	cout << endl;
+	
+}
+///////////////////////////////////////////////////////////////////////////////////
+// Lien thong 
+void Lienthong(int a[][Max]){
+	int sumlt = 0; // tong tp lien thong
+	for(int u = 1; u <= n; u++){
+		if(check[u] == 1){
+			sumlt++;
+			cout << "Thanh phan lien thong " << sumlt <<  " : ";
+			DFS_stack(1,a);
+			cout << endl;
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Tim duong ap dung cho do thi lien thông. 
+/*
+Neu ko lien thong 
+B1 : Kiem tra u, v có trong 1 lien thong = kt[u] , kt[v];
+B2 : Xu ly
+*/
+void timDuong(int u, int v, int befor[]){
+	if(u == v) cout << v <<  " ";
+	if(befor[v] == 0 ){
+		cout << "Khong co duong di";
+		return;
+	}
+	
+	else{
+		int i = v;
+		cout << i << " ";
+		while(befor[i] != u && befor[i] != 0){
+			cout << befor[i] << " ";
+			i = befor[i];
+		}
+		
+		cout << u << endl;
+	}
+}
+/////////////////////////////////////////////////////////////////////////////////////////
+main(){
+	Init();
+	//DFS_dequy(1,a);
+	cout <<"Duyet cac dinh : ";
+	DFS_stack(1,a);
+	cout <<"Duong di : ";
+	timDuong(2,5,befor);	
+    return 0;
+}
+/*
+13
+0 1 1 1 0 0 0 0 0 0 0 0 0
+1 0 1 1 0 1 0 0 0 0 0 0 0
+1 1 0 1 1 0 0 0 0 0 0 0 0
+1 1 1 0 0 0 1 0 0 0 0 0 0
+0 0 1 0 0 1 1 1 0 0 0 1 0
+0 1 0 0 1 0 1 0 0 0 0 1 0
+0 0 0 1 1 1 0 1 0 0 0 0 0
+0 0 0 0 1 0 1 0 0 0 0 1 0
+0 0 0 0 0 0 0 0 0 1 1 0 1
+0 0 0 0 0 0 0 0 1 0 1 1 1
+0 0 0 0 0 0 0 0 1 1 0 0 1
+0 0 0 0 1 1 0 1 0 1 0 0 0
+0 0 0 0 0 0 0 0 1 1 1 0 0
+*/
