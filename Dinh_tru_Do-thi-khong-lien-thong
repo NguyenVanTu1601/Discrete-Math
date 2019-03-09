@@ -1,0 +1,103 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+const int Max = 100;
+int a[Max][Max];
+int check[Max];
+int n;
+int sodinhtru;
+stack <int> qstack;
+/* Y tuong
+Tai dinh u bat ki gan chua xet u = false
+Duyet DFS tai dinh khac u neu Solienthong mới = solienthong ban đầu => u ko la dinh tru
+Và ngược lại .
+*/
+
+void Init(){
+	cout <<"Nhap so dinh n = ";
+	cin >> n;
+	cout <<"Nhap ma tran ke : " << endl;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+		}
+	}
+}
+
+
+void DFS(int u){
+	check[u] = 0;
+	qstack.push(u);
+	while(!qstack.empty()){
+		int s = qstack.top();
+		qstack.pop();
+		for(int t = 1; t <= n; t++){
+			if(check[t] == 1 && a[s][t] == 1){
+				qstack.push(s);
+				qstack.push(t);
+				check[t] = 0;
+				break;
+			}
+		}
+	}
+}
+int tplt(){ // Dem so thanh phan lien thong ban dau
+	int dem = 0;
+	for(int i = 1; i <= n; i++){
+		check[i] = 1;
+	}
+	for(int v = 1; v <= n; v++){
+		if(check[v] == 1){
+			dem++;
+			DFS(v);
+		}
+	}
+	return dem;
+}
+int Sotplt_new(int u){ // Kiem tra tinh lien thong khi bo qa dinh u
+	int dem = 0;
+	for(int i = 1; i <= n; i++){
+		check[i] = 1;
+	}
+	check[u] = 0;
+	for(int v = 1; v <= n; v++){
+		if(check[v] == 1 && v != u){
+			dem++;
+			DFS(v);
+		}
+	}
+	return dem;
+}
+
+void Dinh_tru(int u){
+	// Neu so tplt sau khi bo qa dinh u tang len so vs so tplt ban dau => La dinh tru
+	if(Sotplt_new(u) > tplt()) {
+		sodinhtru++;
+	    cout << "Dinh tru : " << u << endl;
+	}
+}
+main(){
+	Init();
+	
+	for(int i = 1; i <= n; i++){
+		Dinh_tru(i);
+	}
+	if(sodinhtru == 0) cout <<"Khong co dinh tru";
+    return 0;
+}
+/*
+13
+0 1 1 1 0 0 0 0 0 0 0 0 0
+1 0 1 1 0 0 0 0 0 0 0 0 0
+1 1 0 1 1 0 0 0 0 0 0 0 0
+1 1 1 0 0 0 0 0 0 0 0 0 0
+0 0 1 0 0 1 1 1 1 0 0 0 0 
+0 0 0 0 1 0 1 0 1 0 0 0 0
+0 0 0 0 1 1 0 1 0 0 0 0 0
+0 0 0 0 1 0 1 0 1 0 0 0 0
+0 0 0 0 1 1 0 1 0 1 0 0 0 
+0 0 0 0 0 0 0 0 1 0 1 1 1
+0 0 0 0 0 0 0 0 0 1 0 1 1
+0 0 0 0 0 0 0 0 0 1 1 0 1
+0 0 0 0 0 0 0 0 0 1 1 1 0
+*/
