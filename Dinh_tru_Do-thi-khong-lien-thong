@@ -1,3 +1,6 @@
+// Áp dụng cho đồ thị bất kì liên thông hoặc không liên thông
+
+
 #include<iostream>
 #include<bits/stdc++.h>
 using namespace std;
@@ -85,6 +88,7 @@ main(){
 	if(sodinhtru == 0) cout <<"Khong co dinh tru";
     return 0;
 }
+
 /*
 13
 0 1 1 1 0 0 0 0 0 0 0 0 0
