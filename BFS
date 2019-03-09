@@ -1,0 +1,140 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+#define Max 50
+int n;
+int a[Max][Max];
+int check[Max + 1] ;
+queue < int > qlist;
+int befor[Max]; // mang luu cac dinh truoc dinh v
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+void Init(){
+	cout <<"Nhap so dinh n = ";
+	cin >> n;
+	cout <<"Nhap ma tran ke : "<< endl;
+	for(int i = 1; i <= n; i++){
+		check[i] = 1;
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+		}
+	}
+	
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+void BFS_queue(int u, int a[][Max]){
+	qlist.push(u);
+	check[u] = 0;
+	for(int i = 1; i <= n; i++){
+		befor[i] = 0;
+	}
+	
+	while(!qlist.empty()){
+		int s = qlist.front();
+		cout << s << " ";
+		qlist.pop();
+		for(int t = 1; t <= n; t++){
+			if(check[t] == 1 && a[s][t] == 1){
+				qlist.push(t);
+				befor[t] = s; // Ghi lai nut cha truoc nut t
+				check[t] = 0;
+			}
+		}
+	}
+	cout << endl;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////
+void BFS_mang_queue(int i){
+	int queue[Max], low = 1, high = 1, u , v ;
+	queue[low] = i;
+	check[i] = 0;
+	while(low <= high){
+		u = queue[low];
+		low++;
+		for(v = 1; v <= n; v++){
+			if(a[u][v] == 1 && check[v] == 1){
+				high++;
+				queue[high] = v;
+				befor[v] = u;
+				check[v] = 0;
+			}
+		}
+	}
+}
+
+// Kiem tra tinh lien thong 
+// Neu do thi gom 2 so thi con thi ko lien thong
+void lienThong(int a[][Max]){
+	int sumlt = 0; // tong tp lien thong
+	for(int u = 1; u <= n; u++){
+		if(check[u] == 1){
+			sumlt++;
+			cout << "Thanh phan lien thong " << sumlt <<  " : ";
+			BFS_queue(u,a);
+			cout << endl;
+		}
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Tim duong di tu s -> t do chi quan tam toi dinh trc nen thuong bi sai
+// Chi huu dung khi tim duong di tu dinh dau den dinh cuoi 1->n 
+void timDuong(int u, int v, int befor[]){
+	if(u == v) cout << v <<  " ";
+	if(befor[v] == 0 ){
+		cout << "Khong co duong di";
+		return;
+	}
+	
+	else{
+		int i = v;
+		cout << i << " ";
+		while(befor[i] != u ){
+			cout << befor[i] << " ";
+			i = befor[i];
+		}
+		cout << u << endl;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+main(){
+	Init();
+	cout << "Duyet tat ca cac dinh : " ;
+	BFS_queue(1,a);
+	cout <<"Duong di : ";
+	timDuong(1,13,befor);
+	//lienThong(a);
+    return 0;
+}
+/*
+Lien thong
+13
+0 0 1 0 1 0 1 0 0 0 0 0 0
+0 0 0 1 0 1 0 0 0 0 0 0 0 
+1 0 0 0 1 0 1 0 0 0 1 0 0
+0 1 0 0 0 1 0 1 0 1 0 0 0
+1 0 1 0 0 0 1 0 1 0 1 0 1
+0 1 0 1 0 0 0 1 0 1 0 0 0
+1 0 1 0 1 0 0 0 1 0 0 0 0 
+0 0 0 1 0 1 0 0 0 1 0 1 0
+0 0 0 0 1 0 1 0 0 0 1 0 1
+0 0 0 1 0 1 0 1 0 0 0 1 0
+0 0 1 0 1 0 0 0 1 0 0 0 1
+0 0 0 0 0 0 0 1 0 1 0 0 0
+0 0 0 0 1 0 0 0 1 0 1 0 0
+*/
+/*
+BFS(3,a)
+10
+0 1 1 1 0 0 0 0 0 0
+1 0 0 1 1 0 0 0 0 0
+1 0 0 1 0 1 0 0 0 0
+1 1 1 0 1 1 0 0 1 0
+0 1 0 1 0 0 0 1 0 0 
+0 0 1 1 0 0 1 0 0 0
+0 0 0 0 0 1 0 0 1 1
+0 0 0 0 1 0 0 0 1 1 
+0 0 0 1 0 0 1 1 0 1
+0 0 0 0 0 0 1 1 1 0
+*/
+
