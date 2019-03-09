@@ -1,0 +1,85 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+const int Max = 100;
+int a[Max][Max];
+int check[Max];
+int n;
+stack <int> qstack;
+int dem;
+/* 
+Y tuong 
+Gan dinh u co check = 0 tuc la da xet
+Duyet DFS tu 1 dinh khac u
+Neu so dinh di qa  = n - 1 thi no ko phai dinh tru
+< Do co no hay k cung k anh huong den tinh lien thong>
+*/
+void Init(){
+	cout <<"Nhap so dinh n = ";
+	cin >> n;
+	cout <<"Nhap ma tran ke : " << endl;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+		}
+	}
+}
+int DFS(int u){
+	check[u] = 0;
+	qstack.push(u);
+	dem++;
+	while(!qstack.empty()){
+		int s = qstack.top();
+		qstack.pop();
+		for(int t = 1; t <= n; t++){
+			if(check[t] == 1 && a[s][t] == 1){
+				qstack.push(s);
+				qstack.push(t);
+				dem++;
+				check[t] = 0;
+				break;
+			}
+		}
+	}
+	return dem;
+}
+
+void Dinh_tru(int u){
+	dem = 0;
+	for(int i = 0; i <= n; i++){
+		check[i] = 1;
+	}
+	check[u] = 0;
+	
+	if(u == 1){
+		if(DFS(2) != n - 1) cout <<"Dinh tru : " << u << endl; 
+	}
+	else{
+		if(DFS(1) != n - 1) cout <<"Dinh tru : " << u << endl;
+	}
+}
+
+main(){
+	Init();
+	for(int i = 1; i <= n; i++){
+		Dinh_tru(i);
+	}
+	
+    return 0;
+}
+/*
+13
+0 1 1 1 0 0 0 0 0 0 0 0 0
+1 0 1 1 0 0 0 0 0 0 0 0 0
+1 1 0 1 1 0 0 0 0 0 0 0 0
+1 1 1 0 0 0 0 0 0 0 0 0 0
+0 0 1 0 0 1 1 1 1 0 0 0 0 
+0 0 0 0 1 0 1 0 1 0 0 0 0
+0 0 0 0 1 1 0 1 0 0 0 0 0
+0 0 0 0 1 0 1 0 1 0 0 0 0
+0 0 0 0 1 1 0 1 0 1 0 0 0 
+0 0 0 0 0 0 0 0 1 0 1 1 1
+0 0 0 0 0 0 0 0 0 1 0 1 1
+0 0 0 0 0 0 0 0 0 1 1 0 1
+0 0 0 0 0 0 0 0 0 1 1 1 0
+*/
