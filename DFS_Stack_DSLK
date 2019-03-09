@@ -1,0 +1,89 @@
+#include<iostream>
+#include<bits/stdc++.h>
+//#define NULL null
+#define Max 50
+int check[Max];
+int a[Max][Max];
+int n;
+
+using namespace std;
+struct Node{
+	int data;
+	Node *next;
+};
+struct Stack{
+	Node *pfirst;
+	Node *plast;
+};
+void Init(Stack &stack){
+	stack.pfirst = NULL;
+	stack.plast = NULL;
+}
+
+Node *MakeNode(int x){
+	Node *p = new Node;
+	p->data = x;
+	p->next = NULL;
+	return p;
+}
+int Empty_Stack(Stack stack){
+	if(stack.pfirst == NULL) return 1;
+	else return 0; 
+}
+
+void Push_Stack(Stack &stack, int x){
+	Node *p = MakeNode(x);
+	if(Empty_Stack(stack) == 1) stack.pfirst = stack.plast = p;
+	// Khong dung stack->pfirst do stack ko o dang con tro stack
+	else{
+		p->next = stack.pfirst;
+		stack.pfirst = p;
+	}
+}
+
+int Pop_Stack(Stack &stack){
+	if(Empty_Stack(stack) == 0){
+		Node *p = stack.pfirst;
+		stack.pfirst = stack.pfirst->next;
+		return p->data;
+		delete p;
+	}
+	
+}
+
+void Init(){
+	cout <<"Nhap so dinh n = ";
+	cin >> n;
+	cout <<"Nhap ma tran ke :" << endl;
+	for(int i = 1; i <= n; i++){
+		check[i] = 1;
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+		}
+	}
+}
+
+void DFS(Stack &stack,int u){
+	cout << u << " ";
+	check[u] = 0;
+	Push_Stack(stack,u);
+	while(Empty_Stack(stack) == 0){
+		int s = Pop_Stack(stack);
+		for(int v = 1; v <= n; v++){
+			if(check[v] == 1 && a[s][v] == 1){
+				cout << v << " ";
+				Push_Stack(stack,s);
+				Push_Stack(stack,v);
+				check[v] = 0;
+				break;
+			}
+		}
+	}
+}
+
+main(){
+	Stack stack;
+	Init();
+	DFS(stack, 1);
+    return 0;
+}
