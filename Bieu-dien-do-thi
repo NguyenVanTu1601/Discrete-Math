@@ -1,0 +1,84 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+struct So{
+	int ra;
+	int vao;
+};
+
+main(){
+	int n;
+	cin >> n;
+	int a[n+1][n+1];
+	So so[1000];
+	int x = 0;
+	// Nhap ma tran ke
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+		}
+	}
+	// chuyen sang danh sach canh
+	for(int i = 1; i <= n; i++){
+		for(int j = i; j <= n; j++){
+			if(a[i][j] == 1){
+				so[x].ra = i;
+				so[x].vao = j;
+				x++;
+			}
+		}
+	}
+	// Chuyen sang danh sach ke
+	int arr[100]; // luu dinh ke
+	int t = 1;
+	int vitri[100]; // luu vi tri cuoi
+	int z = 1;
+	vitri[0] = 0; // tac dung trung vong for khi in 
+	;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			if(a[i][j] == 1) {
+				arr[t] = j;
+				t++;
+			}
+		}
+		vitri[z] = t - 1;
+		z++;
+	}
+	
+	
+	
+	cout <<"\nMa tran ke : " << endl;
+	for(int i = 1; i <= n; i++){
+	    for(int j = 1; j <= n; j++){
+			cout << a[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << "\nDanh sach canh : " << endl;
+	for(int i = 0; i < x; i++){
+		cout << so[i].ra << " " << so[i].vao << endl;
+	}
+	
+	
+	cout << "\nDanh sach ke : " << endl;
+	for(int i = 1; i < z ; i++){
+		cout  <<"Ke(" << i << ") = {";
+		for(int j = vitri[i-1] + 1; j <= vitri[i]; j++){
+			cout << arr[j];
+			if(j != vitri[i]) cout << ",";
+			else cout <<"}";
+		}
+		cout << endl;
+	}
+    return 0;
+}
+/*
+6
+0 1 1 0 0 0
+1 0 1 1 1 0
+1 1 0 1 0 0
+0 1 1 0 1 1
+0 1 0 1 0 1
+0 0 0 1 1 0
+*/
