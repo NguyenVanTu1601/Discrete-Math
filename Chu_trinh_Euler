@@ -1,0 +1,190 @@
+/*
+Chu trinh Euler
+Do thi vo huong
+Dieu kien : 
++ Lien thong
++ Cac dinh deu co bac chan
+Do thi co huong
++ Lien thong yeu
++ Cac dinh co deg+ = deg-
+*/
+
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+#define Max 100
+int n;
+int a[Max][Max];
+bool check[Max];
+stack<int> q;
+vector < int > chuTrinh;
+void Init(){
+    cin >> n;
+	for(int i = 1; i <= n; i++){
+		check[i] = 0;
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+		}	
+	}
+}
+
+void DFS(int u){
+	q.push(u);
+	check[u] = 0;
+	while(!q.empty()){
+		int s = q.top();
+		q.pop();
+		for(int v = 1; v <= n; v++){
+			if(a[s][v] == 1 && check[v] == 1){
+				q.push(s);
+				q.push(v);
+				check[v] = 0;
+				break;
+			}
+		}
+	}
+}
+
+int LT(){
+	for(int i = 1; i <= n; i++){
+		check[i] = 1;
+	}
+	DFS(1);
+	for(int i = 1; i <= n; i++){
+		if(check[i] == 1) return 0;
+	}
+	return 1;
+}
+
+
+int LT_Yeu(){
+	int kt = 0;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			check[j] = 1;
+		}
+		DFS(i);
+		int dem = 0;
+		for(int i = 1; i <= n; i++){
+			if(check[i] == 0) dem++;
+		}
+		if(dem == n) return 1;
+		else return 0;
+	}
+}
+
+int Deg_vohuong(){
+	int deg = 0;
+	int dem = 0;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			if(a[i][j] == 1) deg++;
+		}
+		if(deg % 2 != 0) return 0; 
+	}
+	return 1;
+}
+
+int Deg_Cohuong(){
+	int demvao = 0;
+	int demra = 0;
+	int demdeg = 0;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			if(a[i][j] == 1) demra++;
+			else if(a[j][i] == 1) demvao++;
+		}
+		if(demvao == demra) demdeg ++;
+	}
+	if(demdeg == n) return 1;
+	return 0;
+}
+
+// Gia su ton tai chu trinh euler
+void Euler(){
+	stack <int> euler;
+	euler.push(1);
+	while(!euler.empty()){
+		int s = euler.top();
+		euler.pop();
+		int kt = 0; // Con dinh ke
+		for(int i = 1; i <= n; i++){
+			if(a[s][i] == 1){
+				a[s][i] = 0;
+				a[i][s] = 0;
+				euler.push(s);
+				euler.push(i);
+				kt = 1;
+				break;
+			}	
+		}
+		if(kt == 0){ // khong con dinh ke s
+			chuTrinh.push_back(s);
+		}
+	}
+}
+void showChuTrinh(){
+	cout <<"Chu trinh Euler : ";
+	for(int i = chuTrinh.size() - 1; i >= 0; i--){
+		cout << chuTrinh[i] << " ";
+	}
+}
+
+main(){
+	Init();
+//	if(LT() == 1 && Deg_vohuong() == 1){
+//		Euler();
+//	    showChuTrinh();
+//	}
+    if(LT_Yeu()==1 && Deg_Cohuong() == 1){
+    	Euler();
+	    showChuTrinh();
+	}
+	
+    return 0;
+}
+
+/*
+Vo huong
+6
+0 1 1 1 1 0 
+1 0 1 1 0 1
+1 1 0 1 1 0
+1 1 1 0 0 1
+1 0 1 0 0 0
+0 1 0 1 0 0
+Co chu trinh Euler : 1 2 3 1 4 2 6 4 3 5 1
+
+13
+0 1 0 0 0 1 0 0 0 0 0 0 0 
+1 0 1 0 1 1 0 0 0 0 0 0 0
+0 1 0 1 1 0 0 0 0 0 1 0 0 
+0 0 1 0 0 0 1 1 0 0 1 0 0
+0 1 1 0 0 1 1 0 0 0 0 0 0
+1 1 0 0 1 0 1 0 0 0 0 0 0
+0 0 0 1 1 1 0 1 0 0 0 0 0
+0 0 0 1 0 0 1 0 1 1 0 0 0
+0 0 0 0 0 0 0 1 0 1 0 1 1
+0 0 0 0 0 0 0 1 1 0 1 1 0
+0 0 1 1 0 0 0 0 0 1 0 1 0
+0 0 0 0 0 0 0 0 1 1 1 0 1
+0 0 0 0 0 0 0 0 1 0 0 1 0
+Chu trinh Euler : 1 2 3 4 7 5 2 6 5 3 11 4 8 9 10 11 12 9 13 12 10 8 7 6 1
+
+Co huong 
+13
+0 1 0 0 0 0 0 0 0 0 0 0 0
+0 0 1 0 1 0 0 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 0 0 1 0 0
+0 0 0 0 0 0 1 0 0 0 1 0 0
+0 0 1 0 0 1 0 0 0 0 0 0 0
+1 1 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 1 1 0 0 0 0 0 0 0 
+0 0 0 1 0 0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 1 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 1 0
+0 0 0 0 0 0 0 0 0 1 0 1 0
+0 0 0 0 0 0 0 0 1 0 0 0 1
+0 0 0 0 0 0 0 0 1 0 0 0 0 
+Chu trinh Euler : 1 2 3 4 7 5 3 11 10 8 4 11 12 9 10 12 13 9 8 7 6 2 5 6 1
+*/
