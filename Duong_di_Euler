@@ -1,0 +1,77 @@
+/*
+Gia su da ton tai duong di euler
+Duong di euler
+Do thi vo huong
++ Lien thong
++ Ton tai 0 hoac 2 dinh co bac le 
+=> Duong di xuat phat tu 1 trong 2 dinh
+Do thi co huong
++Lien thong yeu
++Ton tai 2 dinh u, v có
+Degu+ - degu- = degv- - degv+
+=> Duong di xuat phat tu dinh u
+*/
+
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+#define Max 100
+int n;
+int a[Max][Max];
+bool check[Max];
+stack<int> q;
+vector < int > duongDi;
+void Init(){
+    cin >> n;
+	for(int i = 1; i <= n; i++){
+		check[i] = 0;
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+		}	
+	}
+}
+
+void Euler(int u){
+	stack <int> euler;
+	euler.push(u);
+	while(!euler.empty()){
+		int s = euler.top();
+		euler.pop();
+		int kt = 0;
+		for(int i = 1; i <= n; i++){
+			if(a[s][i] == 1){
+				a[s][i] = 0;
+				a[i][s] = 0;
+				euler.push(s);
+				euler.push(i);
+				kt = 1;
+				break;
+			}
+		}
+		if(kt == 0){ // khong con dinh ke s
+			duongDi.push_back(s);
+		}
+	}
+}
+void showDuongDi(){
+	for(int i = duongDi.size() - 1; i >= 0; i--){
+		cout << duongDi[i] << " ";
+	}
+}
+
+
+main(){
+	Init();
+	Euler(4);
+	showDuongDi();
+    return 0;
+}
+/*
+5
+0 1 0 0 0
+1 0 1 1 1
+0 1 0 1 0
+0 1 1 0 1
+0 1 0 1 0
+-> 4 2 3 4 5 2 1
+*/
