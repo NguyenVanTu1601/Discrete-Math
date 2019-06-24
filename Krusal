@@ -1,0 +1,126 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+#define Max 100
+int a[Max][Max];
+int n;
+int father[Max]; // Cha cua nut x bat ki 
+int Num[Max]; // So phan tu cua cay con chua x
+struct Canh{
+	int dau;
+	int cuoi;
+	int trongso;
+};
+vector<Canh> E; // Luu cac canh ban dau
+vector<Canh> T; // Luu canh tao cay khung
+int Kt = 1; // Kiem tra xem ton tai cay khung hay khong
+int lenKhung = 0;
+bool cmp(Canh a, Canh b){
+	if(a.trongso == b.trongso){
+		if(a.dau == b.dau) return a.cuoi < b.cuoi;
+		return a.dau < b.dau;
+	}
+	return a.trongso < b.trongso;
+}
+
+void Init(){
+	cin >> n;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+		}
+	}
+	for(int i = 1; i <= n; i++){
+		for(int j = i + 1; j <= n; j++){
+			Canh x;
+			if(a[i][j] != 0){
+				x.dau = i;
+				x.cuoi = j;
+				x.trongso = a[i][j];
+				E.push_back(x);
+				a[i][j] = 0;
+				a[j][i] = 0;
+			}
+			
+		}
+	}
+	for(int i = 1; i<= n; i++){
+		father[i] = i;
+		Num[i] = 1;
+	}
+}
+void Sapxep(){
+	sort(E.begin(),E.end(),cmp);
+}
+
+int Find(int x){
+	// Tim nut cha cua nut x
+	while(x != father[x]) x = father[x];
+	return x;
+}
+
+void Union(int x, int y){
+	// Khi cay con thuoc rung cay goc co so cay it hon vao rung co so say nhieu hon
+	if(Num[x] < Num[y]) {
+		father[x] = y;
+		Num[y] += Num[x];
+	}
+	
+	else{
+		father[y] = x;
+		Num[x] += Num[y]; 
+	}
+}
+
+void Kruskal(){
+	Sapxep();
+	int socanh = 0;
+	int i = 0;
+	while(socanh < n-1){
+		int x = Find(E[i].dau);
+		int y = Find(E[i].cuoi);
+		if(x != y){
+			Union(x,y);
+			socanh++;
+			lenKhung += E[i].trongso;
+			T.push_back(E[i]);
+			i++;
+		}
+		else{
+			i++;
+		}
+	}
+	if(socanh != n - 1) Kt = 0;
+}
+
+void Result(){
+	if(Kt == 0) cout << "Khong ton tai cay khung";
+	else{
+		cout << "Do dai cay khung : " << lenKhung << endl;
+		for(int i = 0; i < T.size(); i++){
+			cout <<"(" <<T[i].dau << " " << T[i].cuoi << ") ";
+		}
+	}
+}
+main(){
+	Init();
+	Kruskal();
+	Result();
+    return 0;
+}
+/*
+13
+0 2 1 3 0 0 0 0 0 0 0 0 0
+2 0 2 0 0 5 5 0 0 0 0 0 0
+1 2 0 4 0 5 0 0 0 0 0 0 0
+3 0 4 0 5 5 0 0 0 0 0 0 0
+0 0 0 5 0 6 0 0 0 6 0 0 0
+0 5 5 5 6 0 6 6 6 6 0 0 0
+0 5 0 0 0 6 0 6 0 0 0 0 0
+0 0 0 0 0 6 6 0 7 0 0 7 7
+0 0 0 0 0 6 0 7 0 7 7 0 0 
+0 0 0 0 6 6 0 0 7 0 7 7 0
+0 0 0 0 0 0 0 0 7 7 0 8 0
+0 0 0 0 0 0 0 7 0 7 8 0 8
+0 0 0 0 0 0 0 7 0 0 0 8 0
+*/
