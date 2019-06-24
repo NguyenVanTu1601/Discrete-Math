@@ -1,0 +1,37 @@
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+#define Max 100
+int a[Max][Max];
+int n;
+int d[Max][Max];
+int p[Max][Max];
+int mini = 32000;
+void Init(){
+	cin >> n;
+	for(int i = 1; i <= n; i++){
+		for(int j = 1; j <= n; j++){
+			cin >> a[i][j];
+			if(a[i][j] == 0) a[i][j] = mini;
+			d[i][j] = a[i][j];
+			p[i][j] = i;
+		}
+	}
+}
+
+void Floy(){
+	for(int k = 1; k <= n; k++){
+		for(int i = 1; i <= n; i++){
+			for(int j = 1; j <= n; j++){
+				if(d[i][j] > d[i][k] + d[k][j]){
+					d[i][j] = d[i][k] + d[k][j];
+					p[i][j] = p[k][j];
+				}
+			}
+		}
+	}
+}
+main(){
+
+    return 0;
+}
